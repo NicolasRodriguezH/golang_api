@@ -81,3 +81,37 @@ func GetTodo(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(json)
 }
+
+func GetTodos(w http.ResponseWriter, req *http.Request) {
+	var todos []models.Todo = models.GetAll()
+
+	var data = Data{true, todos, make([]string, 0)}
+	json, _ := json.Marshal(data)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(json)
+}
+
+func DeleteTodo(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+	id := vars["id"]
+
+	var data = Data{Errors: make([]string, 0)}
+
+	todo, success := models.Delete(id)
+	if success != true {
+		data.Errors = append(data.Errors, "could not delete todo")
+	}
+
+	data.Success = true
+	data.Data = append(data.Data, todo)
+
+	json, _ := json.Marshal(data)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(json)
+}
+
+func UpdateTodo() {}

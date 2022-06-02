@@ -4,11 +4,12 @@ import (
 	"database/sql"
 	"log"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
 )
 
 func GetConnection() *sql.DB {
-	db, err := sql.Open("mysql", "root:@/todos_db")
+	connStr := "postgres://postgres:slacklife13@localhost/todos_db?sslmode=disable"
+	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal(err)
 	}
